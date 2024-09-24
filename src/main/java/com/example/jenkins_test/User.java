@@ -1,22 +1,23 @@
 package com.example.jenkins_test;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
+//import jakarta.persistence.Entity;
+//import jakarta.persistence.GeneratedValue;
+//import jakarta.persistence.Id;
 
-@Entity
+//@Entity
 public class User {
 
-    @Id
-    @GeneratedValue
+    //@Id
+    //@GeneratedValue
     private Long id;
     private String username;
     private String email;
-
     private String role;
+
     private String name;
     private String gender;
+    private int birthyear;
     private String phNum;
 
     private String description;
@@ -32,6 +33,7 @@ public class User {
         this.name = userInfo.getName();
         this.gender = userInfo.getGender();
         this.phNum = userInfo.getPhone_number();
+        this.birthyear = userInfo.getBirthyear();
         this.description = null;
         this.image = null;
     }

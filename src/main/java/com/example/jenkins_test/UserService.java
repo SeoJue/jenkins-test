@@ -1,49 +1,58 @@
 package com.example.jenkins_test;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class UserService {
 
-    private final UserRepository userRepository;
+    //private final UserRepository userRepository;
     private final JwtUtils jwtUtils;
 
     @Autowired
-    public UserService(UserRepository userRepository, JwtUtils jwtUtils) {
-        this.userRepository = userRepository;
+    public UserService(/*UserRepository userRepository,*/ JwtUtils jwtUtils) {
+        //this.userRepository = userRepository;
         this.jwtUtils = jwtUtils;
     }
 
-    public String register(String oauthToken){
+    public Map<String, String> register(String oauthToken){
         WebClient webClient = WebClient.builder().build();
         String url = "https://kapi.kakao.com/v2/user/me";
 
-        KakaoUserInfo userInfo = webClient.get()
+         Map<String, Object> attributes = webClient.get()
                 .uri(url)
                 .header("Authorization", "Bearer " + oauthToken)
                 .header("Content-Type", "application/x-www-form-urlencoded")
                 .retrieve()
-                .bodyToMono(KakaoUserInfo.class)
+                .bodyToMono(Map.class)
                 .block();
 
-        if (userInfo != null) {
-            userInfo.setProvider("kakao");
+        System.out.println(attributes);
+
+        User user = null;
+
+        if (attributes != null) {
+            user = new User(new KakaoUserInfo(attributes));
         }else{
             throw new RuntimeException();
         }
 
-        User user = new User(userInfo);
-
-        userRepository.save(user);
+        //userRepository.save(user);
 
         String accessToken = jwtUtils.createAccessToken(user.getUsername());
+        String refreshToken = jwtUtils.createRefreshToken(user.getUsername());
 
+        Map<String, String> tokens = new HashMap<>();
 
-        return accessToken;
+        tokens.put("accessToken", accessToken);
+        tokens.put("refreshToken", refreshToken);
 
+        return tokens;
     }
 
 }

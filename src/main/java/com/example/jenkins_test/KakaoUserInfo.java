@@ -1,66 +1,52 @@
 package com.example.jenkins_test;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.Map;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class KakaoUserInfo{
+public class KakaoUserInfo implements UserInfo{
 
-    private String provider;
-    private String id;
-    @JsonProperty("kakao_account")
-    private Profile profile;
+    private Map<String, Object> attributes;
 
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    private class Profile{
-        private String name;
-        private String email;
-        private String phone_number;
-        private String gender;
-        private int birthyear;
+    private Map<String, Object> profileDatas;
 
-        public Profile() {
-        }
-    }
+    public KakaoUserInfo(Map<String, Object> attributes) {
+        this.attributes = attributes;
+        this.profileDatas = (Map)attributes.get("kakao_account");
 
-    public String getName() {
-        return profile.name;
-    }
-
-    public String getEmail() {
-        return profile.email;
-    }
-
-    public String getPhone_number() {
-        return profile.phone_number;
-    }
-
-    public String getGender() {
-        return profile.gender;
-    }
-
-    public int getBirthyear() {
-        return profile.birthyear;
-    }
-
-    public KakaoUserInfo() {
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public String getProvider() {
-        return provider;
-    }
-
-    public void setProvider(String provider){
-        this.provider = provider;
+        System.out.println(profileDatas);
     }
 
     @Override
-    public String toString(){
-        return  String.format("{id:%s, profile:{name:%s, email:%s, ph.n:%s, gender:%s, birthYear:%d}}",
-                this.id, profile.name, profile.email, profile.phone_number, profile.gender, profile.birthyear);
+    public String getId() {
+        return attributes.get("id").toString();
+    }
+
+    @Override
+    public String getProvider() {
+        return "kakao";
+    }
+
+    @Override
+    public String getName() {
+        return profileDatas.get("name").toString();
+    }
+
+    @Override
+    public String getEmail() {
+        return profileDatas.get("email").toString();
+    }
+
+    @Override
+    public String getPhone_number() {
+        return profileDatas.get("phone_number").toString();
+    }
+
+    @Override
+    public String getGender() {
+        return profileDatas.get("gender").toString();
+    }
+
+    @Override
+    public int getBirthyear() {
+        return Integer.parseInt(profileDatas.get("birthyear").toString());
     }
 }
