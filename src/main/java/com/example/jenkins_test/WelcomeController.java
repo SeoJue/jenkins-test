@@ -77,7 +77,6 @@ public class WelcomeController {
     @ResponseBody
     @GetMapping("/register")
     public String register(@RequestHeader String oauthToken){
-        userService.register(oauthToken);
-
+        return "access: " + userService.register(oauthToken);
     }
 }

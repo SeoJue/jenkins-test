@@ -9,10 +9,12 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final JwtUtils jwtUtils;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, JwtUtils jwtUtils) {
         this.userRepository = userRepository;
+        this.jwtUtils = jwtUtils;
     }
 
     public String register(String oauthToken){
@@ -37,7 +39,10 @@ public class UserService {
 
         userRepository.save(user);
 
-        return;
+        String accessToken = jwtUtils.createAccessToken(user.getUsername());
+
+
+        return accessToken;
 
     }
 
