@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: Jenkins_test
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://carrot-dbow.cf22wuy422ec.ap-northeast-2.rds.amazonaws.com/carrot-dbw?serverTimezone=Asia/Seoul
+    username: admin
+    password: admin123
+
+  jpa:
+    hibernate:
+      ddl-auto: create #update update none
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    show-sql: true
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
