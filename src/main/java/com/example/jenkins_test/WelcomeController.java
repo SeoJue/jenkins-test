@@ -10,10 +10,13 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.Map;
+
 
 @Controller
 public class WelcomeController {
 
+    private final static String token = "MgeHKzUiHU6feW-viNEkX1D4Wd8C8Su-AAAAAQo8JCEAAAGSIibqIJIGkKnmukNu";
 
     @Autowired
     private UserService userService;
@@ -31,7 +34,6 @@ public class WelcomeController {
 
         WebClient webClient = WebClient.builder().build();
         String url = "https://kapi.kakao.com/v2/user/me";
-        String token = "c5yQFCgmznB_cQ1LOLwYa0Jt5UfIVjkTAAAAAQo8I-cAAAGSHVIrmJIGkKnmukNu";
 
         // 어떤 HTTP 메소드로 요청 보낼지를 get(), post() 메소드 등으로 결정
         // 만일 다른 메소드를 쓰고 싶다면, method()
@@ -60,7 +62,6 @@ public class WelcomeController {
     public String test2() {
         WebClient webClient = WebClient.builder().build();
         String url = "https://kapi.kakao.com/v1/user/access_token_info";
-        String token = "MgeHKzUiHU6feW-viNEkX1D4Wd8C8Su-AAAAAQo8JCEAAAGSIibqIJIGkKnmukNu";
 
         String response = webClient.get()
                 .uri(url)
@@ -74,9 +75,11 @@ public class WelcomeController {
         return "success";
     }
 
-    @GetMapping("/register")
-    public ResponseEntity<?> register(/*@RequestHeader String oauthToken*/){
-        String oauthToken = "MgeHKzUiHU6feW-viNEkX1D4Wd8C8Su-AAAAAQo8JCEAAAGSIibqIJIGkKnmukNu";
-        return ResponseEntity.ok().body(userService.register(oauthToken));
+
+    @GetMapping("/login")
+    public ResponseEntity<?> login(){
+        Map<String,String> tokens = userService.login(token, "kakao");
+
+        return ResponseEntity.ok().body(tokens);
     }
 }

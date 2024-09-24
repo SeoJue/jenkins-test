@@ -20,19 +20,10 @@ public class UserService {
         this.jwtUtils = jwtUtils;
     }
 
-    public Map<String, String> register(String oauthToken){
-        WebClient webClient = WebClient.builder().build();
-        String url = "https://kapi.kakao.com/v2/user/me";
+    //@Transactional
+    private User register(OauthAuthenticator authenticator, String oauthToken){
 
-         Map<String, Object> attributes = webClient.get()
-                .uri(url)
-                .header("Authorization", "Bearer " + oauthToken)
-                .header("Content-Type", "application/x-www-form-urlencoded")
-                .retrieve()
-                .bodyToMono(Map.class)
-                .block();
-
-        System.out.println(attributes);
+        Map<String, Object> attributes = authenticator.getUserData(oauthToken);
 
         User user = null;
 
@@ -44,6 +35,26 @@ public class UserService {
 
         //userRepository.save(user);
 
+        return user;
+    }
+
+    public Map<String, String> login(String oauthToken, String provider){
+        OauthAuthenticator authenticator = null;
+
+        if(provider=="kakao"){
+            authenticator = new KakaoAuthenticator();
+        }
+
+        //String username = provider + "_" + authenticator.verifyToken(oauthToken);
+
+        //User user = userRepository.findByUsername(username);
+
+        User user = null;
+
+        if(user==null) {
+            user = register(authenticator, oauthToken);
+        }
+
         String accessToken = jwtUtils.createAccessToken(user.getUsername());
         String refreshToken = jwtUtils.createRefreshToken(user.getUsername());
 
@@ -54,5 +65,4 @@ public class UserService {
 
         return tokens;
     }
-
 }
