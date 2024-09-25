@@ -20,7 +20,6 @@ public class UserService {
         this.jwtUtils = jwtUtils;
     }
 
-    //@Transactional
     private User register(OauthAuthenticator authenticator, String oauthToken){
 
         Map<String, Object> attributes = authenticator.getUserData(oauthToken);
